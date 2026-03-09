@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -72,6 +72,10 @@ def exponent_endpoint():
         return jsonify({"operation": "exponent", "a": a, "b": b, "result": result})
     except (TypeError, ValueError):
         return jsonify({"error": "Invalid input. Please provide numeric values for 'a' and 'b'."}), 400
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
