@@ -1,35 +1,77 @@
-class Calculator:
-    """
-    A simple calculator to perform basic arithmetic operations.
-    """
+from flask import Flask, request, jsonify
 
-    def add(self, a, b):
-        """Returns the sum of two numbers."""
-        return a + b
+app = Flask(__name__)
 
-    def subtract(self, a, b):
-        """Returns the difference of two numbers."""
-        return a - b
+# Define calculator operations
+def add(a, b):
+    return a + b
 
-    def multiply(self, a, b):
-        """Returns the product of two numbers."""
-        return a * b
+def subtract(a, b):
+    return a - b
 
-    def divide(self, a, b):
-        """Returns the division of two numbers. Raises an error if dividing by zero."""
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    if b == 0:
+        return "Error: Division by zero"
+    return a / b
+
+def exponent(a, b):
+    return a ** b
+
+# Define API endpoints
+@app.route('/add/', methods=['GET'])
+def add_endpoint():
+    try:
+        a = float(request.args.get('a'))
+        b = float(request.args.get('b'))
+        result = add(a, b)
+        return jsonify({"operation": "add", "a": a, "b": b, "result": result})
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid input. Please provide numeric values for 'a' and 'b'."}), 400
+
+@app.route('/subtract/', methods=['GET'])
+def subtract_endpoint():
+    try:
+        a = float(request.args.get('a'))
+        b = float(request.args.get('b'))
+        result = subtract(a, b)
+        return jsonify({"operation": "subtract", "a": a, "b": b, "result": result})
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid input. Please provide numeric values for 'a' and 'b'."}), 400
+
+@app.route('/multiply/', methods=['GET'])
+def multiply_endpoint():
+    try:
+        a = float(request.args.get('a'))
+        b = float(request.args.get('b'))
+        result = multiply(a, b)
+        return jsonify({"operation": "multiply", "a": a, "b": b, "result": result})
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid input. Please provide numeric values for 'a' and 'b'."}), 400
+
+@app.route('/divide/', methods=['GET'])
+def divide_endpoint():
+    try:
+        a = float(request.args.get('a'))
+        b = float(request.args.get('b'))
         if b == 0:
-            raise ValueError("Cannot divide by zero.")
-        return a / b
+            return jsonify({"error": "Division by zero is not allowed."}), 400
+        result = divide(a, b)
+        return jsonify({"operation": "divide", "a": a, "b": b, "result": result})
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid input. Please provide numeric values for 'a' and 'b'."}), 400
 
-    def exponentiate(self, base, exponent):
-        """Returns the result of raising base to the power of exponent."""
-        return base ** exponent
+@app.route('/exponent/', methods=['GET'])
+def exponent_endpoint():
+    try:
+        a = float(request.args.get('a'))
+        b = float(request.args.get('b'))
+        result = exponent(a, b)
+        return jsonify({"operation": "exponent", "a": a, "b": b, "result": result})
+    except (TypeError, ValueError):
+        return jsonify({"error": "Invalid input. Please provide numeric values for 'a' and 'b'."}), 400
 
-# Example usage
-if __name__ == "__main__":
-    calc = Calculator()
-    print("Addition: ", calc.add(10, 5))
-    print("Subtraction: ", calc.subtract(10, 5))
-    print("Multiplication: ", calc.multiply(10, 5))
-    print("Division: ", calc.divide(10, 5))
-    print("Exponentiation: ", calc.exponentiate(2, 3))
+if __name__ == '__main__':
+    app.run(debug=True)
