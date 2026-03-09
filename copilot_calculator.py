@@ -21,6 +21,10 @@ class Calculator:
             raise ValueError("Cannot divide by zero.")
         return a / b
 
+    def exponentiate(self, base, exponent):
+        """Returns the result of raising base to the power of exponent."""
+        return base ** exponent
+
 # Example usage
 if __name__ == "__main__":
     calc = Calculator()
@@ -28,3 +32,4 @@ if __name__ == "__main__":
     print("Subtraction: ", calc.subtract(10, 5))
     print("Multiplication: ", calc.multiply(10, 5))
     print("Division: ", calc.divide(10, 5))
+    print("Exponentiation: ", calc.exponentiate(2, 3))
